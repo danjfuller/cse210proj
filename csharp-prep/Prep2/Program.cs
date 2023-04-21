@@ -41,7 +41,7 @@ class Program
                 letterGrade += "-";
             }
         }
-        Console.WriteLine(letterGrade); // give the user their letter Grade
+        Console.WriteLine($"Grade: {letterGrade}"); // give the user their letter Grade
 
         if(percentage >= 70) // if the percentage is 70 or above, then tell them they passed it
         {
