@@ -5,8 +5,8 @@ class Program
     static void Main(string[] args)
     {
         Random randomizer = new Random();
-        int magic = randomizer.Next(1, 100); // random number from 1 to 100
-        int guess;
+        int magic = randomizer.Next(1, 101); // random number from 1 to 100
+        int guess = -1; // give a default value
         do
         {
             Console.Write("What is your guess? ");
