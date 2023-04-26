@@ -4,10 +4,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        //Console.Write("What is the magic number? ");
-        //string textNumber = Console.ReadLine(); // get the user's magic number as text
-        //int magic = int.Parse(textNumber); // convert to integer
-        //above code ^^ prompts for the magic number instead...
         Random randomizer = new Random();
         int magic = randomizer.Next(1, 100); // random number from 1 to 100
         int guess;
