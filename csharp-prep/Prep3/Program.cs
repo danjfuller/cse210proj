@@ -4,7 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Random randomizer = new Random();
+        Random randomizer = new Random(); // a random class
         int magic = randomizer.Next(1, 101); // random number from 1 to 100
         int guess = -1; // give a default value
         do
