@@ -11,7 +11,7 @@ public class Entry
     {   
         prompt = question;
         response = inputText;
-        date = System.DateTime.Now.ToString(); // input date as a string
+        date = System.DateTime.Now.ToShortDateString(); // input date as a string
     }
 
     // a constructor for entry, taking in a date value, also
@@ -32,6 +32,6 @@ public class Entry
     // gives a savefile-friendly version of this entry
     public string Save()
     {
-        return date + "\n" + prompt;
+        return $"{date}~|~{prompt}~|~{response}"; 
     }
 }

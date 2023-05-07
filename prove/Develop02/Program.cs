@@ -57,10 +57,10 @@ class Program
                 myJournal.Display(); // show their current journal entries from this session
                 break;
             case "3":
-                Load(); // load a Journal
+                Save(); // save the journal
                 break;
             case "4":
-                Save(); // save the journal
+                Load(); // load a Journal
                 break;
 
             default: // if the case they give is not any of the above:
@@ -106,11 +106,13 @@ class Program
     // Saves the current journal at specified fileName
     static void SaveJournal(string fileName)
     {
-        System.IO.StreamWriter writer = new StreamWriter(fileName);
-        foreach(Entry entry in myJournal.entries)
+        // some code in case the file exists already to confirm overwriting it
+        using (System.IO.StreamWriter writer = new StreamWriter(fileName)) // only exist inside this scope to prevent bugs
         {
-            writer.WriteLine(entry.Save());
-            writer.WriteLine(entry.response);
+            foreach(Entry entry in myJournal.entries)
+            {
+                writer.WriteLine(entry.Save()); // save the file as one line
+            }
         }
     }
 
@@ -124,7 +126,12 @@ class Program
     // turns the journal from a given file to a readable Journal class
     static void LoadJournal(string fileName)
     {
-        myJournal = new Journal();
+        if(!System.IO.File.Exists(fileName))
+        {
+            Console.WriteLine("This file does not exist. Try again."); // this file does not exist
+            return; // exit this finction, and show the menu again
+        }
+        myJournal = new Journal(); // do a breand new journal
         string[] lines = System.IO.File.ReadAllLines(fileName);
         for(int l = 0; l < lines.Length; l++) // each line is a fileName
         {
