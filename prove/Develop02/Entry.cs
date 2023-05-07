@@ -2,9 +2,9 @@ using System;
 
 public class Entry
 {
-    string date;
+    string date; // keep these all private for now
     string prompt;
-    public string response;
+    string response;
 
     // a constructor for the entry, inputting response and date and prompt into the class
     public Entry(string question, string inputText)
@@ -18,7 +18,7 @@ public class Entry
     public Entry(string question, string inputText, string time)
     {   
         prompt = question;
-        response = inputText;
+        response = inputText; // map inputs to the class variables
         date = time;
     }
 

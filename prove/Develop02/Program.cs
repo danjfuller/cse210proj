@@ -64,8 +64,15 @@ class Program
                 break;
 
             default: // if the case they give is not any of the above:
-                Console.WriteLine("Command not recognized. Try again, pressing either 1,2,3,4 or 5.");
-                Console.WriteLine("Or type \"Quit\" to exit the program");
+                if(choice == "5" || choice == "quit" || choice == "Quit") // and they are not quitting...
+                {
+                    // let them proceed to quit
+                }
+                else // they did the wrong command
+                {
+                    Console.WriteLine("Command not recognized. Try again, pressing either 1,2,3,4 or 5.");
+                    Console.WriteLine("Or type \"Quit\" to exit the program");
+                }
                 break;
         }
         if(choice == "5" || choice == "quit" || choice == "Quit")
@@ -139,7 +146,7 @@ class Program
             string date = parts[0];
             string question = parts[1];
             string inputText = parts[2];
-            Entry entry = new Entry(question, inputText, date);
+            Entry entry = new Entry(question, inputText, date); // make a new entry
             myJournal.entries.Add(entry);
         }
     }

@@ -8,6 +8,7 @@ public class Journal
         entries = new List<Entry>(); // initialize the entries variable
     }
 
+    // displays journal in a nice format
     public void Display()
     {
         foreach(Entry entry in entries)
