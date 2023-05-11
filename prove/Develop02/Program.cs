@@ -93,7 +93,7 @@ class Program
 
         // make a new entry, and prompt them to fill it
         Entry entry = new Entry(prompts[promptNum], PromptEntry(promptNum));
-        myJournal.entries.Add(entry); // add it to our current journal
+        myJournal._entries.Add(entry); // add it to our current journal
     }
 
     // get response to the chosen journal prompt number
@@ -116,7 +116,7 @@ class Program
         // some code in case the file exists already to confirm overwriting it
         using (System.IO.StreamWriter writer = new StreamWriter(fileName)) // only exist inside this scope to prevent bugs
         {
-            foreach(Entry entry in myJournal.entries)
+            foreach(Entry entry in myJournal._entries)
             {
                 writer.WriteLine(entry.Save()); // save the file as one line
             }
@@ -147,7 +147,7 @@ class Program
             string question = parts[1];
             string inputText = parts[2];
             Entry entry = new Entry(question, inputText, date); // make a new entry
-            myJournal.entries.Add(entry);
+            myJournal._entries.Add(entry);
         }
     }
 }
