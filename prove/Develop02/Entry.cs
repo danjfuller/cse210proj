@@ -1,12 +1,16 @@
-using System;
+using System.Text.Json;
 
 public class Entry
 {
-    string _date; // keep these all private for now
-    string _prompt;
-    string _response;
+    public string _date {get; set;} // keep these all private for now
+    public string _prompt {get; set;}
+    public string _response {get; set;}
 
     // a constructor for the entry, inputting response and date and prompt into the class
+    public Entry()
+    {
+        // do nothing (this exists for the JSON deserialization process, which will fill in the varaibles itself later)
+    }
     public Entry(string question, string inputText)
     {   
         _prompt = question;

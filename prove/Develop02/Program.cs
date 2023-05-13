@@ -1,9 +1,19 @@
 using System;
+using System.Text.Json;
 
+/********************************************************
+* Author: Daniel Fuller, May 13, 2023
+* 
+* This Program helps you keep a Journal. In addition, I
+* added that the journal is saved as a JSON file, and I 
+* have included extra error-checking for that and for 
+* user's terminal commands.
+********************************************************/
 class Program
 {
+    // multiple different prompts for users to respond to
     public static List<string> prompts = new List<string>
-    { // multiple different prompts for users to respond to
+    {
         "What was my favorite meal today?",
         "Who was the most interesting person I interacted with today?",
         "What was the best part of my day?",
@@ -12,11 +22,11 @@ class Program
         "What was really worth my time that I did today?"
     };
 
-    static Journal myJournal;
+    static Journal _myJournal; // The current Journal class being used
 
     static void Main(string[] args)
     {
-        myJournal = new Journal(); // get our journal ready
+        _myJournal = new Journal(); // get our journal ready, starting blank
         Welcome();
         
         MainMenu();
@@ -54,7 +64,7 @@ class Program
                 NewPromptEntry(); // let them write a new journal entry
                 break;
             case "2":
-                myJournal.Display(); // show their current journal entries from this session
+                _myJournal.Display(); // show their current journal entries from this session
                 break;
             case "3":
                 Save(); // save the journal
@@ -93,7 +103,7 @@ class Program
 
         // make a new entry, and prompt them to fill it
         Entry entry = new Entry(prompts[promptNum], PromptEntry(promptNum));
-        myJournal._entries.Add(entry); // add it to our current journal
+        _myJournal._entries.Add(entry); // add it to our current journal
     }
 
     // get response to the chosen journal prompt number
@@ -106,39 +116,69 @@ class Program
     // has user save their file
     static void Save()
     {
-        Console.WriteLine("What file name should this be saved as? ");
-        SaveJournal(Console.ReadLine());
+        Console.WriteLine("Who will this Journal be saved for? ");
+        string saveName = Console.ReadLine();
+        SaveJournal(saveName);
     }
 
-    // Saves the current journal at specified fileName
+        // Saves the current journal at specified fileName.json
     static void SaveJournal(string fileName)
     {
-        // some code in case the file exists already to confirm overwriting it
-        using (System.IO.StreamWriter writer = new StreamWriter(fileName)) // only exist inside this scope to prevent bugs
+        _myJournal._title = fileName; // identify inside the file who owns it
+        using (System.IO.StreamWriter writer = new StreamWriter(fileName + ".json")) // only exist inside this scope to prevent bugs
         {
-            foreach(Entry entry in myJournal._entries)
-            {
-                writer.WriteLine(entry.Save()); // save the file as one line
-            }
+            var options = new JsonSerializerOptions { WriteIndented = true }; // write the json save file nicely indented
+            string json = JsonSerializer.Serialize(_myJournal, options); // convert this class into a json format
+            writer.WriteLine(json); // save to a file
+
+            Console.WriteLine($"Saved as {fileName}.json"); // inform the user of our doing it
         }
     }
 
     // has user load their chosen journal file
     static void Load()
     {
-        Console.WriteLine("What Journal file name do you want to load?");
+        Console.WriteLine("Who's Journal name do you want to load? (as a .json)");
         LoadJournal(Console.ReadLine());
     }
 
-    // turns the journal from a given file to a readable Journal class
+    // turns the journal from given fileName.json to a readable Journal class
     static void LoadJournal(string fileName)
     {
-        if(!System.IO.File.Exists(fileName))
+        fileName = fileName.Replace(".txt", ".json"); // turn any text files into a json file, or else we can't read it
+        if(!System.IO.File.Exists(fileName)) // if the file does not exist
         {
-            Console.WriteLine("This file does not exist. Try again."); // this file does not exist
-            return; // exit this finction, and show the menu again
+            if(System.IO.File.Exists(fileName + ".json")) // try once again with fileName extension added at end
+            {
+                fileName = fileName + ".json"; // if that works, then add extension to end of fileName
+            }
+            else
+            {
+                Console.WriteLine("This file does not exist. Try again."); // else this file does not exist
+                return; // exit this function, and show the menu again
+            }
         }
-        myJournal = new Journal(); // do a breand new journal
+
+        try // try to load the file, and inform user of any errors while doing so
+        {
+            string jsonText = System.IO.File.ReadAllText(fileName); // read file
+            _myJournal = JsonSerializer.Deserialize<Journal>(jsonText)!; // '!' at end allows the return to be null
+        }
+        catch
+        {
+            Console.WriteLine("Error reading JSON File. Try fixing with a separate text editor");
+            _myJournal = new Journal(); // make a blank journal like at the start of the program
+        }
+        
+        if(_myJournal == null) // if the journal is blank...
+        {
+            Console.WriteLine("File Loading failed due to incompatible or empty text format"); // say that this file didn't load properly
+            _myJournal = new Journal(); // then make a new journal, like it was at the start of the program
+        }
+
+        /***************************************************************************
+        * 1.0 older loading format
+        ****************************************************************************
         string[] lines = System.IO.File.ReadAllLines(fileName);
         for(int l = 0; l < lines.Length; l++) // each line is a fileName
         {
@@ -149,5 +189,6 @@ class Program
             Entry entry = new Entry(question, inputText, date); // make a new entry
             myJournal._entries.Add(entry);
         }
+        */
     }
 }

@@ -1,8 +1,9 @@
-using System;
+using System.Text.Json;
 
 public class Journal
 {
-    public List<Entry> _entries;
+    public string _title {get; set;} // have a title of the JSON File
+    public List<Entry> _entries {get; set;}
     public Journal()
     {
         _entries = new List<Entry>(); // initialize the entries variable
