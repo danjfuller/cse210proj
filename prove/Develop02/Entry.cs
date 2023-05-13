@@ -2,7 +2,7 @@ using System.Text.Json;
 
 public class Entry
 {
-    public string _date {get; set;} // keep these all private for now
+    public string _date {get; set;}
     public string _prompt {get; set;}
     public string _response {get; set;}
 
