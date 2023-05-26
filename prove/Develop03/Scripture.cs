@@ -7,11 +7,13 @@ class Scripture
 
     public Scripture()
     {
+        _scripture = "Trust in the Lord with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.";
+        _reference = new Reference("Proverbs 3:5-6");
         _words = new List<Word>();
         SplitVerseIntoWords(); // turn the string into a list of words
     }
 
-    // if the coder wants to make a custom scripture to memorize
+    // if the coder wants to make a custom scripture to memorize (can be multiple verses)
     public Scripture(string scritpure, string reference)
     {
         _scripture = scritpure;

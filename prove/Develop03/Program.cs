@@ -1,5 +1,8 @@
 using System;
 
+// Scripture Memorizer, by Daniel Fuller
+// This memorizer blanks out 3 words at a time,and they are always new words, not ones already blanked out.
+// In addition, this program prompts the user to choose from a list of unique verses to memorize.
 class Program
 {
     public static Scripture _scripture;
