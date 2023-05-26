@@ -2,12 +2,12 @@ class Word
 {
     private string _word;
 
-    private bool _isBlank = false;
+    private bool _isBlank;
 
     public Word(string word)
     {
         _word = word;
-        _isBlank = false;
+        _isBlank = false; // start with a blank word
     }
 
     public string FullWord()
