@@ -25,9 +25,7 @@ class Program
         PromptForScripture(); // get the verse that they want to do
         Console.Clear();
         _scripture.PrintScripture();
-        Console.WriteLine("\nPress Enter to continue, or type 'quit' to exit: ");
-        Console.ReadLine(); // wait for them to continue
-        while(_scripture.PrintWithFewer()) // print the scripture with some words missing
+        do // print the scripture with some words missing
         {
             Console.WriteLine("\nPress Enter to continue, or type 'quit' to exit: ");
             string input = Console.ReadLine();
@@ -35,7 +33,7 @@ class Program
             {
                 break;
             }
-        }
+        } while(_scripture.PrintWithFewer()); // do again with some words missing
     }
 
     // ask the user what scripture they want to practice...
