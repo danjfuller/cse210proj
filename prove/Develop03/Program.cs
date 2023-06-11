@@ -25,7 +25,7 @@ class Program
         PromptForScripture(); // get the verse that they want to do
         Console.Clear();
         _scripture.PrintScripture();
-        do // print the scripture with some words missing
+        do // print the scripture
         {
             Console.WriteLine("\nPress Enter to continue, or type 'quit' to exit: ");
             string input = Console.ReadLine();
