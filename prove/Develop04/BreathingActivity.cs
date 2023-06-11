@@ -11,12 +11,16 @@ class Breathing : Activity
     public void Begin()
     {
         Start();
+        StartTimer(); // time starts now
+        Console.WriteLine(""); // give some initial space for the activity
         while(!TimesUp())
         {
-            Console.Write("\nBreathe in...");
+            Console.Write("Breathe in...");
             CountDown(4);
-            Console.WriteLine("Breathe out...");
+            Console.Write("\n"); // new line
+            Console.Write("Now breathe out...");
             CountDown(4);
+            Console.WriteLine("\n"); // double new line
         }
         Finish();
     }

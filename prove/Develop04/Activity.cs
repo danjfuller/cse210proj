@@ -31,7 +31,7 @@ class Activity
         Console.WriteLine($"Welcome to the {activity} Activity.\n");
     }
 
-    // sets how long the activity will last
+    // gets from user and sets the length for how long the activity will last
     private void PromptForSeconds()
     {
         do
@@ -51,11 +51,17 @@ class Activity
             }
         }
         while(_seconds < 0);
-        _endTime = DateTime.Now.AddSeconds(_seconds); // set an end time a cartain distance from now
+    }
+
+    // starts the timer for your activity (sets the end time for it)
+    public void StartTimer()
+    {
+        _endTime = DateTime.Now.AddSeconds(_seconds); // set an end time the declared seconds time from now
     }
 
     public void Start()
     {
+        Console.Clear();
         StateActivity(_name);
         Console.WriteLine(_summary);
         Console.WriteLine("");
@@ -70,8 +76,8 @@ class Activity
     {
         Console.WriteLine("Great Job!\n");
         StallForSeconds(3); // wait
-        Console.WriteLine($"You completed the {_name} Activity. Time was {_seconds} seconds.");
-        StallForSeconds(3);
+        Console.WriteLine($"You completed the {_name} Activity. You did this for {_seconds} seconds.");
+        StallForSeconds(5);
         Console.Clear(); // clear the console for next program
     }
 
@@ -84,15 +90,23 @@ class Activity
     // shows an animation to stall the time out until it finishes
     public void StallForSeconds(int time)
     {
-        Console.WriteLine("stalling...");
-        Thread.Sleep(250); // wait a quarter second
-        Console.Write("\b\b"); // erase the character
+        List<char> stallers = new List<char> {'-','\\','|','/'};
+        for(int t = time*2; t > 0; t--)
+        {
+            Console.Write(stallers[t % stallers.Count]); // wrap through this list many times over again
+            Thread.Sleep(500); // wait a half second (this is why we multiplied time by 2 at the start)
+            Console.Write("\b \b"); // erase it
+        }
     }
 
     // Counts down until you hit zero, then ends
     public void CountDown(int start)
     {
-        Console.WriteLine(start);
-        Thread.Sleep(1000); // sleep for a second
+        for(int i = start; i > 0; i--)
+        {
+            Console.Write(i);
+            Thread.Sleep(1000); // sleep for a second
+            Console.Write("\b \b"); // remove the character, then loop again
+        }
     }
 }

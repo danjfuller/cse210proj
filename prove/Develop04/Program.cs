@@ -15,13 +15,17 @@ class Program
         }
     }
     
-    // clears terminal and writes the menu on terminal
+    // writes the menu on terminal
     public static void DisplayMenu()
     {
-        Console.WriteLine("Menu");
+        Console.WriteLine("Menu Options:");
+        Console.WriteLine("   1. Breathing Activity");
+        Console.WriteLine("   2. Reflecting Activity");
+        Console.WriteLine("   3. Listing Activity");
+        Console.WriteLine("   4. Quit");
     }
 
-    // has user choose an option, and if they want to continue the app
+    // has user choose an option, and if they want to continue this application
     public static bool ChooseActivity()
     {
         Console.Write("Select an option: ");
@@ -30,10 +34,16 @@ class Program
         switch(choice)
         {
             case "1":
+                Breathing _breathing = new Breathing();
+                _breathing.Begin(); // start the breathing activity
                 break;
             case "2":
+                Reflection _reflection = new Reflection();
+                _reflection.Begin(); // begin reflection activity
                 break;
             case "3":
+                Listing _listing = new Listing();
+                _listing.Begin(); // begin listing activity
                 break;
             case "4":
             case "quit":
