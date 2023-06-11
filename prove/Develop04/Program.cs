@@ -1,6 +1,7 @@
 using System;
 
-// This program exceeds requirements by adding robust error checking
+// This program exceeds requirements by adding menu error checking
+// This program also gives unique prompts for the reflection activity, and notifies the user when it must reuse the prompts again.
 class Program
 {
     // A program to help you practice mindfullness with 3 different exercies
