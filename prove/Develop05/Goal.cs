@@ -36,10 +36,17 @@ class Goal
     // contains additional instructions for setup of the goal
     public virtual void SetUp()
     {
-        Console.Write("What is the ammount of points to associate with accomplishing this goal?");
+        Console.Write("What is the ammount of points to associate with accomplishing this goal? ");
         string pointString = Console.ReadLine();
-        int point = int.Parse(pointString);
-        _points = point; // save the point value
+        if(!int.TryParse(pointString, out int point))
+        {
+            Console.Write("Invalid number. Default value of 5 was chosen");
+            _points = 5; // save the point value
+        }
+        else
+        {
+            _points = point; // save the point value
+        }
     }
 
     // prints the name out
@@ -57,14 +64,35 @@ class Goal
         Console.Write($" ({_description})");
     }
 
-    public void MarkComplete()
+    public bool IsComplete()
     {
-        _isComplete = true;
+        return _isComplete;
+    }
+
+    // marks the goal as complete and gives you the points of it
+    // unless the goal has already been completed.
+    public virtual int MarkComplete()
+    {
+        if(_isComplete)
+        {
+            Console.WriteLine("Goal is already complete. No points rewarded.");
+            return 0;
+        }
+        else
+        {
+            _isComplete = true;
+            return _points;
+        }
     }
 
     // sets the points for completing this goal
     public void SetPoints(int pointValue)
     {
         _points = pointValue;
+    }
+
+    public int GetPointValue()
+    {
+        return _points;
     }
 }

@@ -19,7 +19,7 @@ class ChecklistGoal : Goal
     {
         base.Load(info);
         string[] sections = info.Split("~|~");
-        if(sections.Length < 7) // we need to have at least 7 data items in this array
+        if(sections.Length < 8) // we need to have at least 7 data items in this array
         {
             _progress = 0;
             _numTimes = 1;
@@ -27,9 +27,9 @@ class ChecklistGoal : Goal
             Console.WriteLine("Error loading checklist goal. Progress Values set to defaults");
             return;
         }
-        _progress = int.Parse(sections[4]);
-        _numTimes = int.Parse(sections[5]);
-        _pointForFinish = int.Parse(sections[6]);
+        _progress = int.Parse(sections[5]);
+        _numTimes = int.Parse(sections[6]);
+        _pointForFinish = int.Parse(sections[7]);
     }
 
     // show their progress on this goal
@@ -44,8 +44,45 @@ class ChecklistGoal : Goal
     {
         base.SetUp(); // do the standard setup first
         Console.Write("How many times should this goal be accomplished? ");
-        _numTimes = int.Parse(Console.ReadLine()); // convert to a number
+        if(!int.TryParse(Console.ReadLine(), out int num))
+        {
+            Console.Write("Invalid number. Default value of 5 was chosen");
+            _numTimes = 5; // save the point value
+        }
+        else
+        {
+            _numTimes = num; // save the point value
+        }
         Console.Write("What is a bonus points amount for accomplishing this goal that many times? ");
-        _pointForFinish = int.Parse(Console.ReadLine()); // get the points for completing
+        if(!int.TryParse(Console.ReadLine(), out int finalPoint))
+        {
+            Console.Write("Invalid number. Default value of 50 was chosen");
+            _pointForFinish = 50; // save the point value
+        }
+        else
+        {
+            _pointForFinish = finalPoint; // save the point value
+        }
+    }
+
+    public override int MarkComplete()
+    {
+        if(IsComplete())
+        {
+            return base.MarkComplete(); // give them the same message as the base class when finished
+        }
+        else
+        {
+            _progress++; // nice job!
+            if(_progress >= _numTimes)
+            {
+                base.MarkComplete(); // have the base class mark itself as finished (ignore it's return value)
+                return _pointForFinish; // they did the goal!
+            }
+            else
+            {
+                return GetPointValue();
+            }
+        }
     }
 }

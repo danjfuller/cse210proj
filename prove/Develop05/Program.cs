@@ -1,6 +1,9 @@
 using System;
 using System.Text.Json;
 
+// This program keeps track of goals and awards points for achieving them
+// Extra work added was robust error checking of the program to prevent
+// the user from causing errors in the program
 class Program
 {
     public static List<Goal> _goals;
@@ -38,7 +41,7 @@ class Program
                 ShowGoalList(); // show the goals
                 break;
             case "3":
-                Console.Write("What name should this be saved as (.json)? ");
+                Console.Write("What name should this be saved as (.txt)? ");
                 SaveGoals(Console.ReadLine());
                 break;
             case "4":
@@ -138,17 +141,21 @@ class Program
         Console.WriteLine("The Goals are:");
         for(int g = 0; g < _goals.Count; g++)
         {
-            Console.WriteLine($"  {g}. ");
+            Console.Write($"  {g+1}. ");
             _goals[g].PrintName();
+            Console.WriteLine("");
         }
-        Console.WriteLine("Which Goal did you do?");
-        int report = int.Parse(Console.ReadLine());
-        while (report > _goals.Count - 1)
+        Console.Write("Which Goal did you do? ");
+        if(!int.TryParse(Console.ReadLine(), out int report) || report - 1 > _goals.Count)
         {
-            Console.Write("Invalid. Try again.");
-            report = int.Parse(Console.ReadLine());
+            Console.Write("Invalid. No changes made.");
         }
-        _goals[report].MarkComplete();
+        else
+        {
+            int points = _goals[report-1].MarkComplete();
+            Console.WriteLine($"You Earned {points} Points!");
+            _totalPoints += points; // get the user their increased points
+        }
     }
 
     static void SaveGoals(string fileName)
