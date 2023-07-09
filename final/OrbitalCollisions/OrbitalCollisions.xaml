@@ -1,0 +1,20 @@
+﻿<Window x:Class="OrbitalCollisions.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OrbitalCollisions"
+        mc:Ignorable="d"
+        Title="Orbital Collisions v0.1" Height="450" Width="800">
+    <Grid>
+        <Button Content="Start" HorizontalAlignment="Center" Height="22" Margin="0,10,0,0" VerticalAlignment="Top" Width="78" Click="Button_Click"/>
+        <ItemsControl Name="AllSats">
+        </ItemsControl>
+        <Image Name="satImage" Margin="563,247,155,79" Stretch="Fill">
+            <Image.Source>
+                <BitmapImage DecodePixelWidth="82" UriSource="/Assets/Satellite.png">
+            </BitmapImage>
+            </Image.Source>
+        </Image>
+    </Grid>
+</Window>
