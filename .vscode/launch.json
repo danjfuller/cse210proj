@@ -3,6 +3,9 @@
     "version": "0.2.0",
     "configurations": [
 
+
+
+
         {
             "name": "Sandbox Project",
             "type": "coreclr",
@@ -246,6 +249,17 @@
             "args": [],
             "cwd": "${workspaceFolder}/final/Foundation4",
             "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "stopAtEntry": false
+        },
+
+        {
+            "name": "Gravity Simulator",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/final/Gravity Simulation/bin/Debug/net7.0-windows/Gravity Simulation.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/final/Gravity Simulation",
             "internalConsoleOptions": "neverOpen",
             "stopAtEntry": false
         },
