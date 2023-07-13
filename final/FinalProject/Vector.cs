@@ -53,6 +53,11 @@ namespace OrbitalCollisions
             return new Vector(a.X() + b.X(), a.Y() + b.Y());
         }
 
+        public static Vector operator *(Vector a, float scalar)
+        {
+            return new Vector(a.X() * scalar, a.Y() * scalar);
+        }
+
         public static Vector Cross(Vector left, Vector right)
         {
             return _up;
