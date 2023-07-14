@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Gtk;
+using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Transactions;
 
 namespace OrbitalCollisions
@@ -10,14 +12,16 @@ namespace OrbitalCollisions
         private Vector _position;
         private Vector _velocity;
         private Trajectory _trajectory;
-        private float _gravitationalConstant = 0.0000000000667f;
+        private float _gravitationalConstant = 6.67430f * MathF.Pow(10, -11);
 
         public Object(float mass, Vector position) 
         {
             _mass = mass;
             _position = position;
             _velocity = new Vector(1, 0);
-            _trajectory = new Trajectory(_velocity);
+            _trajectory = new Trajectory();
+            _collisionRadius = 5; // meters as default collision radius for this object
+            _trajectory.Add(position);
         }
 
         public List<Vector> GetTrajectory()
@@ -41,6 +45,11 @@ namespace OrbitalCollisions
             _collisionRadius = radius;
         }
 
+        public float GetCollisionRadius()
+        {
+            return _collisionRadius;
+        }
+
         public Vector GetPosition()
         {
             return _position;
@@ -56,6 +65,7 @@ namespace OrbitalCollisions
             _velocity = _velocity + (Acc * timeStep);
 
             _position = _position + (_velocity * timeStep); //+ (Acc * (0.5f * timeStep * timeStep)); // move along your velocity path
+            _trajectory.Add(_position);
         }
 
         // sets the object to be at a speed that will keep it in a stable circular orbit
@@ -64,6 +74,7 @@ namespace OrbitalCollisions
             float v = MathF.Sqrt(_gravitationalConstant * centralMass / _position.Magnitude()); // magnitude of their velocity
             Vector vel = new Vector(-_position.Y(), _position.X());
             vel = vel.Normalized() * v;
+            Console.WriteLine($"Object orbital Speed: {v} m/s");
             return vel;
         }
     }

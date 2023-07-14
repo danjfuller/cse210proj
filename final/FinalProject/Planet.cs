@@ -6,7 +6,7 @@ namespace OrbitalCollisions
     {
         public Planet(float mass, float radius, Vector position) : base(mass, position)
         {
-            SetCollisionRadius(radius);
+            SetCollisionRadius(radius); // this also lets the window know how big to make the circle for it
         }
     }
 }

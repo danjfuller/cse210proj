@@ -5,98 +5,104 @@ using OrbitalCollisions;
 using Key = Gdk.Key;
 using Timeout = GLib.Timeout;
 
-// old example class
-class Game
-{
-    public int player_x = 200, player_y = 600;
-    int dy = 0;     // vertical velocity in pixels/tick
-
-    public void tick(bool move_left, bool move_right)
-    {
-        if (move_left)
-            player_x -= 5;
-        else if (move_right)
-            player_x += 5;
-
-        player_y += dy;
-        if (player_y >= 600)
-        {  // hit the ground
-            dy = 0;     // stop falling
-            player_y = 600;
-        }
-        else
-            dy += 2;    // accelerate downward
-    }
-
-    public void jump()
-    {
-        if (player_y == 600 && dy == 0)
-            dy = -20;
-    }
-}
-
 // this class handles the window for you. Sim gives position data
 class View : DrawingArea
 {
-    Game game;
     Simulation _sim;
     //ImageSurface sat = new ImageSurface("C:\\Users\\Dan F\\Documents\\cse210proj\\final\\FinalProject\\satellite.png");
     //ImageSurface sat2 = new ImageSurface("C:\\Users\\Dan F\\Documents\\cse210proj\\final\\FinalProject\\satellite.png");
 
-    public View(Game game, Simulation sim)
+    public View(Simulation sim)
     {
-        this.game = game;
         _sim = sim;
     }
 
     protected override bool OnDrawn(Context c) // override the drawing method for the window
     {
         Cairo.Color satColor = new Cairo.Color(1, 0, 0);
-
-        // draws a line
-        //c.SetSourceRGB(0, 0, 0);
-        //c.MoveTo(0, 600);
-        //c.LineTo(800, 600);
-        //c.Stroke(); // pick up the pen
-
-        // dino jump part
-        //c.SetSourceSurface(sat, game.player_x, game.player_y - sat.Height);
-        //c.Paint();
+        Cairo.Color planetColor = new Cairo.Color(0, 0, 1);
 
         // draw the planet
-        c.SetSourceRGB(0, 0, 1); // blue color
-        c.Arc(MyWindow.Width() / 2, MyWindow.Height() / 2, _sim.DiamCenterPlanet()/_sim.MetersPerPixel(), 0.0, Math.PI * 2); // planet at center
+        c.SetSourceColor(planetColor); // blue color
+        c.Arc(MyWindow.Width() / 2.0, MyWindow.Height() / 2.0, _sim.DiamCenterPlanet()/_sim.MetersPerPixel(), 0.0, Math.PI * 2.0); // planet at center
         c.Fill();
 
-        // draw a circle to represent each satellite
+        // draw a circle to represent each Object
         List<OrbitalCollisions.Object> objects = _sim.GetObjects();
-        c.SetSourceColor(satColor);
         for (int i = 0; i < objects.Count; i++)
         {
             Vector pos = objects[i].GetPosition();
+            float radius = objects[i].GetCollisionRadius() / _sim.MetersPerPixel(); // get the radius for this object
+            if(radius < 3.0f)
+            {
+                radius = 3; // create a minimum size
+                c.SetSourceColor(satColor); // it's a satellite
+            }
+            else
+            {
+                c.SetSourceColor(planetColor); // its a planet, likely
+            }
             pos = pos * (1.0f / _sim.MetersPerPixel()); // scale the position to be in terms of pixel space
-            c.Arc(pos.X() + MyWindow.Width()/2.0, pos.Y() + MyWindow.Height()/2.0f, 5, 0, Math.PI * 2); // draw a circle to represent them,origin is in center of window
+            c.Arc(pos.X() + MyWindow.Width()/2.0, pos.Y() + MyWindow.Height()/2.0f, radius, 0, Math.PI * 2); // draw a circle to represent them,origin is in center of window
             c.Fill();
+
+            // Draw trajectory now
+            DrawTrajectory(objects[i], c);
+
         }
 
         return true;
+    }
+
+    // draws the past trajectory of an object
+    private void DrawTrajectory(OrbitalCollisions.Object obj, Context c)
+    {
+        List<Vector> points = obj.GetTrajectory();
+        if (points.Count > 2)
+        {
+            c.SetSourceRGB(0.5, 0.5, 0.5); // dark line
+            c.LineWidth = 1; // small as possible line
+            Vector pixel = ScreenCoordinate(points[points.Count - 1]);
+            c.MoveTo(pixel.X(), pixel.Y());
+            for (int p = points.Count - 2; p > 0; p--)
+            {
+                pixel = ScreenCoordinate(points[p]);
+                c.LineTo(pixel.X(), pixel.Y());
+            }
+            c.Stroke(); // pick up the pen
+        }
+    }
+
+    private Vector ScreenCoordinate(Vector simPoint)
+    {
+        return new Vector(simPoint.X()/_sim.MetersPerPixel() + MyWindow.Width()/2.0f, simPoint.Y()/_sim.MetersPerPixel() + MyWindow.Height()/2.0f);
     }
 }
 
 class MyWindow : Gtk.Window
 {
-    Game game = new Game();
     Simulation sim;
-    HashSet<Key> keys = new HashSet<Key>();
-    private static int _width = 800;
+    //HashSet<Key> keys = new HashSet<Key>(); in case keyboard is used
+    private static int _width = 1280;
     private static int _height = 800;
 
     public MyWindow() : base("Orbital Collision Simulator")
     {
+        /* // This section is experimental
+        Box zoomButtons = new Box(Orientation.Horizontal, 5);
+        zoomButtons.Add(new Label("Zoom: "));
+        zoomButtons.Add(new Button("In"));
+        zoomButtons.Add(new Button("Out"));
+        Add(zoomButtons);
+        */
+
         Resize(_width, _height);
-        sim = new Simulation(5); //new simulation with 5 sats
-        Add(new View(game, sim));
-        Timeout.Add(30, on_timeout); // 1 tick per 30 milliseconds
+
+        sim = new Simulation(10); //new simulation with N sats
+        Add(new View(sim));
+        Timeout.Add(30, on_timeout); // 1 tick per every N milliseconds
+        float timeScaling = (1000.0f / 30.0f) * sim.TimeStep();
+        Console.WriteLine($"Simulation Scaling: {timeScaling}s per second");
     }
 
     public static int Width()
@@ -113,11 +119,12 @@ class MyWindow : Gtk.Window
     bool on_timeout()
     {
         sim.tick();
-        game.tick(keys.Contains(Key.Left), keys.Contains(Key.Right));
+        //tick(keys.Contains(Key.Left), keys.Contains(Key.Right));
         QueueDraw();
         return true;
     }
 
+    /*
     protected override bool OnKeyPressEvent(EventKey e)
     {
         if (e.Key == Key.space)
@@ -133,6 +140,7 @@ class MyWindow : Gtk.Window
         keys.Remove(e.Key);
         return true;
     }
+    */
 
     protected override bool OnDeleteEvent(Event ev)
     {

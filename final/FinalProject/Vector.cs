@@ -43,11 +43,6 @@ namespace OrbitalCollisions
             return _y;
         }
 
-        public static float Dot(Vector a, Vector b)
-        {
-            return 0.0f;
-        }
-
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.X() + b.X(), a.Y() + b.Y());
@@ -56,16 +51,6 @@ namespace OrbitalCollisions
         public static Vector operator *(Vector a, float scalar)
         {
             return new Vector(a.X() * scalar, a.Y() * scalar);
-        }
-
-        public static Vector Cross(Vector left, Vector right)
-        {
-            return _up;
-        }
-
-        public static Vector Interpolate(Vector a, Vector b, float percentage)
-        {
-            return _up;
         }
     }
 }
