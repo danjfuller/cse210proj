@@ -19,7 +19,7 @@ namespace OrbitalCollisions
         {
             _mass = mass;
             _position = position;
-            _velocity = new Vector(1, 0);
+            _velocity = new Vector(0, 0); // default velocity of 0
             _trajectory = new Trajectory();
             _collisionRadius = 5; // meters as default collision radius for this object
             _trajectory.Add(position);

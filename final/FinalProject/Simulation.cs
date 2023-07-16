@@ -43,8 +43,7 @@ namespace OrbitalCollisions
 
             Vector vel = new Vector(-1 * pos.Y(), pos.X()); // set their motion to be tangential to the center of the circle
             vel = vel.Normalized();
-            Satellite sat = new Satellite(2, // mass (2kg satellite)
-                                            pos, // position
+            Satellite sat = new Satellite(  pos, // position
                                             vel); // velocity
                                                   //make the satellite be at orbital speed around the earth plus a little extra to make it interesting
             sat.SetName(name); // give it a debug name
