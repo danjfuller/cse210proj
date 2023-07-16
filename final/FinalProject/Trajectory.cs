@@ -9,18 +9,18 @@ namespace OrbitalCollisions
         private int logged;
         public Trajectory()
         {
-            _path = new List<Vector>();
+            _path = new List<Vector>(301);
             logged = new Random().Next(0,waitTime); // have each trajectory start logging data at a different time, to keep framerate smooth
         }
 
         // add a new vector to our trajectory, optimizing trajectory for storage
         public void Add(Vector v)
         {
-            // if this is at 0
+            // if this is the time to log it,
             if(logged == 0) 
             { 
                 _path.Add(v);
-                if (_path.Count > 500)
+                if (_path.Count > 300)
                 {
                     _path.RemoveAt(0); // remove the oldest
                 }
@@ -28,34 +28,15 @@ namespace OrbitalCollisions
             }
             else
             {
-                logged--; // count down to zero
+                logged--; // count down to zero, then we'll log it
             }
             
         }
 
-        public List<Vector> GetTrajectory()
+        // so other classes can plot our movement
+        public List<Vector> GetPath()
         {
             return _path;
-        }
-
-        private float WhenCollide(Trajectory otherPath)
-        {
-            return 0.0f;
-        }
-
-        public void Plot()
-        {
-            return;
-        }
-
-        public List<Vector> NextSpots()
-        {
-            return _path.GetRange(0, 5); // next 5 points for now
-        }
-
-        public bool WillCollide()
-        {
-            return false;
         }
     }
 }

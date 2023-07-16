@@ -25,7 +25,7 @@ namespace OrbitalCollisions
         public Vector Normalized()
         {
             float scalar = 1.0f / Magnitude();
-            return Scale(scalar);
+            return this * scalar;
         }
         
         public float Magnitude()
@@ -43,9 +43,16 @@ namespace OrbitalCollisions
             return _y;
         }
 
+
+        // static methods for math use
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.X() + b.X(), a.Y() + b.Y());
+        }
+
+        public static Vector operator -(Vector a, Vector b)
+        {
+            return new Vector(a.X() -  b.X(), a.Y() - b.Y());
         }
 
         public static Vector operator *(Vector a, float scalar)
