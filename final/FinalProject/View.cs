@@ -7,12 +7,7 @@ using OrbitalCollisions;
 class View : DrawingArea
 {
     private static float _metersPerPixel = 100000; // meters per pixel
-    Simulation _sim;
-
-    // the programmer can change the displayed color themes here
-    private Cairo.Color _satColor = new Cairo.Color(1, 0, 0);
-    private Cairo.Color _closeEncounter = new Cairo.Color(0, 1, 0);
-    private Cairo.Color _planetColor = new Cairo.Color(0, 0, 1);
+    private Simulation _sim;
     
     private List<OrbitalCollisions.Object> _objects;
     private bool _firstCall;
@@ -41,11 +36,6 @@ class View : DrawingArea
             _firstCall = false;
         }
 
-        // draw the center planet, and treat it as though it is stationary
-        c.SetSourceColor(_planetColor); // blue color
-        c.Arc(MyWindow.Width() / 2.0, MyWindow.Height() / 2.0, _sim.RadiusCenterPlanet() / _metersPerPixel, 0.0, Math.PI * 2.0); // planet at center
-        c.Fill();
-
         // draw each satellite trajectory first
         for (int t = 0; t < _objects.Count; t++)
         {
@@ -57,18 +47,8 @@ class View : DrawingArea
         List<OrbitalCollisions.Object> plottedObjects = new List<OrbitalCollisions.Object>(); // list of previously plotted objects
         for (int i = 0; i < _objects.Count; i++)
         {
-
-            // set the color if it
-            float radius = _objects[i].GetCollisionRadius() / _metersPerPixel; // get the radius for this object
-            if (radius < 3.0f)
-            {
-                radius = 3; // create a minimum size
-                c.SetSourceColor(_satColor); // it's a satellite
-            }
-            else
-            {
-                c.SetSourceColor(_planetColor); // its a planet, likely
-            }
+            // set the color of it
+            c.SetSourceColor(_objects[i].Color());
 
             // Collision zone check
             for (int p = 0; p < plottedObjects.Count; p++) // simple collision checker
@@ -78,7 +58,8 @@ class View : DrawingArea
                 if ((_objects[i].GetPosition() - plottedObjects[p].GetPosition()).Magnitude() <
                     (_objects[i].GetCollisionRadius() + plottedObjects[p].GetCollisionRadius() + _metersPerPixel))
                 {
-                    c.SetSourceColor(_closeEncounter); // set its color to a warning color
+                    c.SetSourceColor(_objects[i].CloseEncounter()); // set its color to a warning color
+                    // now one object of the two will denote that it is too close to the other
                     //Console.WriteLine($"{objects[i].Name()} passed within 1 pixel of {plottedObjects[p].Name()} at this scale");
                 }
             }
@@ -87,7 +68,14 @@ class View : DrawingArea
             // plot the object
             Vector pos = _objects[i].GetPosition();
             pos = pos * (1.0f / _metersPerPixel); // scale the position to be in terms of pixel space
-            c.Arc(pos.X() + MyWindow.Width() / 2.0, pos.Y() + MyWindow.Height() / 2.0f, radius, 0, Math.PI * 2); // draw a circle to represent them,origin is in center of window
+            // set radius
+            float radius = _objects[i].GetCollisionRadius() / _metersPerPixel;
+            if (radius < 5)
+            {
+                radius = 5; // radius can't be smaller than 5 pixels
+            }
+            // draw it
+            c.Arc(pos.X() + MyWindow.Width() / 2.0, pos.Y() + MyWindow.Height() / 2.0f, radius , 0, Math.PI * 2); // draw a circle to represent them,origin is in center of window
             c.Fill();
         }
 

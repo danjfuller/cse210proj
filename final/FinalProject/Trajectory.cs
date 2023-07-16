@@ -2,6 +2,7 @@
 
 namespace OrbitalCollisions
 {
+    // logs and tracks position data for plotting sake
     class Trajectory
     {
         private List<Vector> _path;

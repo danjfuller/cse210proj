@@ -9,28 +9,22 @@ using Timeout = GLib.Timeout;
 class MyWindow : Gtk.Window
 {
     Simulation sim;
-    //HashSet<Key> keys = new HashSet<Key>(); in case keyboard is used
+    //HashSet<Key> keys = new HashSet<Key>(); in case keyboard is used later
     private static int _width = 1280;
     private static int _height = 800;
 
     public MyWindow(int numSats) : base("Orbital Collision Simulator")
     {
-        /* // This section is experimental
-        Box zoomButtons = new Box(Orientation.Horizontal, 5);
-        zoomButtons.Add(new Label("Zoom: "));
-        zoomButtons.Add(new Button("In"));
-        zoomButtons.Add(new Button("Out"));
-        Add(zoomButtons);
-        */
-
         Resize(_width, _height);
-
         sim = new Simulation(numSats); //new simulation with N sats
+
         View view = new View(sim);
         Add(new View(sim));
         Timeout.Add(30, on_timeout); // 1 tick per every N milliseconds
+
         float timeScaling = (1000.0f / 30) * sim.TimeStep();
         Console.WriteLine($"\nSimulation Scaling: {timeScaling}s simulated per second");
+
         float defaultKmPerPixel = 100.0f;
         Console.WriteLine("Earth's radius ~ 6378 km. Moon's distance ~ 384,467 km");
         Console.Write($"Kilometers per pixel? (default is {defaultKmPerPixel}) : ");
@@ -65,6 +59,7 @@ class MyWindow : Gtk.Window
     }
 
     /*
+    // for keypress options
     protected override bool OnKeyPressEvent(EventKey e)
     {
         if (e.Key == Key.space)

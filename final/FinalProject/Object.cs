@@ -3,6 +3,7 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Transactions;
 
+// Base class for planets and satellites
 namespace OrbitalCollisions
 {
     class Object
@@ -14,21 +15,36 @@ namespace OrbitalCollisions
         private Trajectory _trajectory;
         private float _gravitationalConstant = 6.67430f * MathF.Pow(10, -11);
         private string _name;
+        protected Cairo.Color _color;
+        private bool _static;
 
-        public Object(float mass, Vector position) 
+        public Object(float mass, Vector position, string name) 
         {
+            _static = false;
             _mass = mass;
             _position = position;
             _velocity = new Vector(0, 0); // default velocity of 0
             _trajectory = new Trajectory();
             _collisionRadius = 5; // meters as default collision radius for this object
             _trajectory.Add(position);
-            _name = "Object"; // default name for object
+            _name = name; // set name for object
+            _color = new Cairo.Color(0,0,0); // black object for now
         }
 
-        public void SetName(string name)
+        public Cairo.Color Color()
         {
-            _name = name;
+            return _color;
+        }
+
+        public virtual Cairo.Color CloseEncounter()
+        {
+            return new Cairo.Color(0, 1, 0); // a special color to denote a close encounter
+        }
+
+        // tell this object to not move
+        public void SetAsStatic()
+        {
+            _static = true; // don't move
         }
 
         // gives the name of this object
@@ -71,6 +87,10 @@ namespace OrbitalCollisions
 
         public void Move(float timeStep, float planetMass)
         {
+            if(_static) 
+            {
+                return; // static objects don't move 
+            }
 
             float F_Gravity = _gravitationalConstant * planetMass * _mass / MathF.Pow(_position.Magnitude(), 2); // magnitude of gravitational force
             Vector G_Dir = new Vector(-_position.X(), - _position.Y()); // assume the planet is at the center of the coordinate system

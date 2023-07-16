@@ -2,6 +2,7 @@
 
 namespace OrbitalCollisions
 {
+    // Handles the 2D vectors of this program
     class Vector
     {
         private float _x;

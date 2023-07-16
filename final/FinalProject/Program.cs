@@ -4,8 +4,8 @@ using OrbitalCollisions;
 using System;
 
 // By Daniel Fuller, July 2023
-// Creates and shows a simulation of satellites in orbit centered around the earth
-// includes the moon, as well. Starts lowest satellites at ISS orbit height
+// This program creates and shows a simulation of satellites in orbit centered around the earth.
+// It includes the moon, as well- Set the km per pixel to 800 to see it.
 class Program
 {
     static void Main()
@@ -17,12 +17,12 @@ class Program
         Console.WriteLine("-Planets and other circulate bodies are marked in BLUE");
         Console.WriteLine("-Satellites that pass very close to another (within a");
         Console.WriteLine(" pixel distance) are marked as GREEN while this happens");
-        Console.WriteLine("NOTE: Both this Terminal and the GUI program show information.\n");
+        Console.WriteLine("-NOTE: Both this Terminal and the GUI program show information.\n");
         int numSats = 1;
         bool valid = false;
         do
         {
-            Console.Write("How Many Satellites? (default is 10) : ");
+            Console.Write("How many Satellites? (default is 10, max is 99) : ");
             string ans = Console.ReadLine();
             if(ans == "")
             {
