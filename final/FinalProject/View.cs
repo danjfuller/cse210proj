@@ -8,9 +8,12 @@ class View : DrawingArea
 {
     private static float _metersPerPixel = 100000; // meters per pixel
     Simulation _sim;
+
+    // the programmer can change the displayed color themes here
     private Cairo.Color _satColor = new Cairo.Color(1, 0, 0);
     private Cairo.Color _closeEncounter = new Cairo.Color(0, 1, 0);
     private Cairo.Color _planetColor = new Cairo.Color(0, 0, 1);
+    
     private List<OrbitalCollisions.Object> _objects;
     private bool _firstCall;
 
