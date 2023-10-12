@@ -7,6 +7,7 @@ This is representative of a situation where satellites could pass in close proxi
 
 ## Startup
 This is a built version (requires .net 7.0 on your computer). 
+To access the source code, go to https://github.com/danjfuller/cse210proj/tree/main/final/FinalProject
 
 When the program starts, the terminal will open and show informational text, which will read similar to this:
 Orbital Collision Simulator v1.1
